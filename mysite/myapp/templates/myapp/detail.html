@@ -20,7 +20,7 @@
     <div class="col-span-1 border rounded-lg p-6 space-y-4 shadow-md">
         <p class="text-2xl font-semibold text-gray-900">$ {{product.price}}</p>
         <div>
-            <select name="" id="">
+            <select name="" id="select">
                 <option value="">1</option>
                 <option value="">2</option>
                 <option value="">3</option>
@@ -32,9 +32,29 @@
         {% else %}
         <p class="text-sm text-red-700">Sin stock</p>
         {% endif %}
-        <button class="w-full bg-yellow-400 text-black font-semibold py-2 rounded-lg">Agregar al carro</button>
+        <button 
+            id="atc" 
+            value="{{product.id}}"
+            class="w-full bg-yellow-400 text-black font-semibold py-2 rounded-lg"
+        >
+            Agregar al carro
+        </button>
         <button class="w-full bg-gray-900 text-white font-semibold py-2 rounded-lg">Comprar ahora</button>
         <p class="text-sm text-green-600">Vendido por: Guarever</p>
     </div>
 </div>
+<script>
+    $(document).on("click","#atc", function(e){
+        console.log("Botón del carro clickeado");
+        $.ajax({
+            type:"POST",
+            url: '{% url "cart_add" %}',
+            data: {
+                csrfmiddlewaretoken: "{{csrf_token}}",
+                product_id: $("#atc").val(),
+                product_quantity: $("#select option:selected").text(),
+            },
+        });
+    });
+</script>
 {% endblock %}
