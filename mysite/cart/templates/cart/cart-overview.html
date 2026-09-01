@@ -1,0 +1,98 @@
+{% extends 'myapp/base.html' %}
+<!--Comment-->
+{% block body %}
+<h2 class="text-3xl font-semibold mb-8 text-gray-800">Carro de Compras</h2>
+
+{% if cart %}
+<!--Cart Table-->
+<form method="post" action="">
+  {% csrf_token %}
+  <div class="overflow-x-auto rounded shadow border border-gray-200">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-100 text-sm text-gray-600 uppercase tracking-wider">
+        <tr>
+          <th class="p-4 text-left">Imagen del Producto</th>
+          <th class="p-4 text-left">Producto</th>
+          <th class="p-4 text-left">Cantidad</th>
+          <th class="p-4 text-left">Precio Unitario</th>
+          <th class="p-4 text-left">Total</th>
+          <th class="p-4 text-left">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        {% for item in cart %}
+        <!--Comment-->
+
+        <!--Comment-->
+        {% with product=item.product %}
+        <tr class="hover:bg-gray-50 transition duration-150">
+          <td class="p-4">
+            <img
+              src="{{ product.image.url }}"
+              alt="{{ product.title }}"
+              class="w-20 h-20 object-contain rounded"
+            />
+          </td>
+          <td class="p-4 font-medium text-gray-800">{{ product.name }}</td>
+
+          <!-- <td class="p-2">{{ item.qty }}</td> -->
+          <td class="p-4">
+            <select id="select{{product.id}}">
+              <option selected>{{item.qty}}</option>
+
+              <option value="">1</option>
+
+              <option value="">2</option>
+
+              <option value="">3</option>
+
+              <option value="">4</option>
+            </select>
+          </td>
+
+          <td class="p-4 text-gray-700">${{ item.price }}</td>
+          <td class="p-4 text-gray-700">${{ item.total }}</td>
+
+          <td class="p-4 space-x-2">
+            <button
+              type="button"
+              name="update"
+              data-index="{{product.id}}"
+              value="{{product.id}}"
+              class="update inline-block bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md text-sm transition"
+            >
+              Actualizar
+            </button>
+            <button
+              type="button"
+              name="delete"
+              data-index="{{product.id}}"
+              value="{{product.id}}"
+              class="delete inline-block bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-sm transition"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+        {% endwith %}
+        <!--Comment-->
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</form>
+<!--End Cart Table-->
+
+<!--Cart Total-->
+<div class="mt-6 text-right pr-2">
+  <strong class="text-lg text-gray-900"
+    >Total: ${{ cart.get_total_price}}</strong
+  >
+</div>
+{% else %}
+<!--Empty Cart Message-->
+<p class="text-gray-500 text-center text-lg mt-12">Tu carro está vacío.</p>
+{% endif %}
+<!--Comment-->
+
+{% endblock %}
