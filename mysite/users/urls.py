@@ -17,7 +17,7 @@ urlpatterns=[
 
     #password reset url paths
     path('password-reset',auth_views.PasswordResetView.as_view(template_name='users/password-reset.html'),name='password_reset'),
-    path('password-reset/done',auth_views.PasswordChangeDoneView.as_view(template_name='users/password-reset-sent.html'),name='password_reset_done'),
+    path('password-reset/done',auth_views.PasswordResetDoneView.as_view(template_name='users/password-reset-sent.html'),name='password_reset_done'),
     path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='users/password-reset-form.html'),name='password_reset_confirm'),
     path('password-reset-complete',auth_views.PasswordResetCompleteView.as_view(template_name='users/password-reset-complete.html'),name='password_reset_complete'),
 ]
