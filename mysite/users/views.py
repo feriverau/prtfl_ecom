@@ -7,10 +7,11 @@ from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.utils.encoding import force_bytes,force_str
 from .token import account_activation_token
 from django.contrib.auth.models import User
-from .forms import LoginForm
+from .forms import LoginForm,UserUpdateForm
 from django.contrib.auth import authenticate,login,logout
 
 # Create your views here.
+
 def register(request):
     form = CreateUserForm()
     if request.method=="POST":
@@ -33,6 +34,7 @@ def register(request):
             return redirect('email-verification-sent')
     return render(request,'users/register.html',{'form':form})
 
+
 def email_verification(request,uidb64,token):
     unique_id = force_str(urlsafe_base64_decode(uidb64))
     user = User.objects.get(pk=unique_id)
@@ -52,6 +54,7 @@ def email_verification_success(request):
 def email_verification_failed(request):
     return render(request,'users/email-verification-failed.html')
 
+
 def user_login(request):
     form = LoginForm()
     if request.method=="POST":
@@ -69,3 +72,14 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('index')
+
+
+def profile(request):
+    if request.method=="POST":
+        user_form = UserUpdateForm(request.POST,instance=request.user)
+        if user_form.is_valid():
+            user_form.save()
+            return redirect('index')
+
+    user_form = UserUpdateForm(instance=request.user)
+    return render(request,'users/profile.html',{'user_form':user_form})
