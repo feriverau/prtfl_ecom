@@ -17,3 +17,14 @@ def add_address(request):
             return redirect("index")
     form = AddressForm(instance=address)
     return render(request,'orders/add_address.html',{'form':form})
+
+
+def checkout(request):
+    if request.user.is_authenticated:
+        try:
+            address = Address.objects.get(user=request.user)
+            return render(request,'orders/checkout.html',{'address':address})
+        except:
+            return render(request,'orders/checkout.html')
+    else:
+        return render(request,'orders/checkout.html')
