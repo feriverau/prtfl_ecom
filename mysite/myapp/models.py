@@ -9,7 +9,7 @@ class Product(models.Model):
         return reverse('detail',args=[self.slug])
 
     name = models.CharField(max_length=100)
-    price = models.FloatField()
+    price = models.IntegerField()
     description = models.TextField()
     image = models.ImageField(upload_to='images/')
     slug = models.SlugField(max_length=100,unique=True,blank=True)

@@ -89,6 +89,12 @@
     >Total: ${{ cart.get_total_price}}</strong
   >
 </div>
+<div class="flex justify-center">
+  <a href="{% url 'checkout' %}"
+   class="block w-md bg-gray-900 text-white font-semibold py-2 rounded-lg text-center">
+   Realizar Pedido
+</a>
+</div>
 {% else %}
 <!--Empty Cart Message-->
 <p class="text-gray-500 text-center text-lg mt-12">Tu carro está vacío.</p>

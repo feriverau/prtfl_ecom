@@ -1,5 +1,32 @@
-<form method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button type="submit">Guardar Dirección</button>
-</form>
+{% extends 'myapp/base.html' %}
+
+{% block body %}
+<div class="flex flex-col items-center min-h-screen p-10">
+    <h1>Datos del Perfil</h1>
+    <form method="POST" class="shadow-lg space-y-6 p-10 w-96">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="bg-red-500 text-white p-2">
+            {% for error in form.non_field_errors %}
+            <p>{{error}}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% for field in form %}
+        <div>
+            <label for="">{{field.label}}</label>
+            <div class="border rounded p-2">{{field}}</div>
+            <!-- Errores de cada campo -->
+            {% if field.errors %}
+            <div class="bg-red-500 text-white p-2 mt-2">
+                {% for error in field.errors %}
+                <p>{{error}}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <button class="bg-blue-600 px-2 py-2 w-full text-white">Guardar</button>
+    </form>
+</div>
+{% endblock %}

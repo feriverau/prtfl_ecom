@@ -39,7 +39,11 @@
         >
             Agregar al carro
         </button>
-        <button class="w-full bg-gray-900 text-white font-semibold py-2 rounded-lg">Comprar ahora</button>
+        <a href="{% url 'cart-overview' %}"
+            class="block w-full bg-gray-900 text-white font-semibold py-2 rounded-lg text-center">
+            Comprar ahora
+        </a>
+        <!-- <button class="w-full bg-gray-900 text-white font-semibold py-2 rounded-lg">Comprar ahora</button> -->
         <p class="text-sm text-green-600">Vendido por: Guarever</p>
     </div>
 </div>
