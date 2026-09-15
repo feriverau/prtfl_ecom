@@ -14,14 +14,18 @@
         </div>
         {% endif %}
         <div>
-            <label for="">Username</label>
+            <label for="">Usuario</label>
             <div class="border rounded p-2">{{form.username}}</div>
         </div>
         <div>
-            <label for="">Password</label>
+            <label for="">Contraseña</label>
             <div class="border rounded p-2">{{form.password}}</div>
         </div>
-        <button class="bg-blue-600 px-2 py-2 w-full text-white">Login</button>
+        <button class="bg-gray-900 px-2 py-2 w-full text-white rounded-md font-semibold">Ingresar</button>
+        <a href="{% url 'register' %}"
+            class="block w-full bg-gray-900 text-white font-semibold py-2 rounded-md text-center">
+            Registrarse
+        </a>
 
     </form>
     
