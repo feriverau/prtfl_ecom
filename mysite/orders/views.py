@@ -3,8 +3,10 @@ from .forms import AddressForm
 from .models import Address,Order,OrderItem
 from cart.cart import Cart
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
+@login_required
 def add_address(request):
     try:
         address = Address.objects.get(user=request.user)
@@ -21,6 +23,7 @@ def add_address(request):
     return render(request,'orders/add_address.html',{'form':form})
 
 
+@login_required
 def checkout(request):
     if request.user.is_authenticated:
         try:
@@ -31,6 +34,8 @@ def checkout(request):
     else:
         return render(request,'orders/checkout.html')
 
+
+@login_required
 def place_order(request):
     order_success=False
     if request.method=="POST":
