@@ -11,7 +11,7 @@
     ></script>
     <title>FriendlEcom</title>
   </head>
-  <body>
+  <body class="min-h-screen flex flex-col">
     <!--Nav-->
     <nav
       class="bg-gray-200 shadow-md px-4 py-2 px-16 flex items-center justify-between"
@@ -123,9 +123,56 @@
       </div>
     </nav>
     <!--Nav-->
+    <main class="flex-1">
     {% block body %}
     <!--Comment-->
 
     {% endblock %}
+    </main>
+    <footer class="bg-gray-900 text-gray-300 mt-8">
+    <div class="max-w-7xl mx-auto px-16 py-10">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+
+            <div>
+                <h3 class="text-lg font-semibold text-white mb-3">
+                    FriendlEcom
+                </h3>
+                <p class="text-sm">
+                    Más que un E-Commerce.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-white mb-3">Tienda</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="{% url 'index' %}" class="hover:text-white">Inicio</a></li>
+                    <!-- <li><a href="#" class="hover:text-white">Categorías</a></li>
+                    <li><a href="#" class="hover:text-white">Ofertas</a></li> -->
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-white mb-3">Mi cuenta</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="{% url 'cart-overview' %}" class="hover:text-white">Carrito</a></li>
+                    <li><a href="{% url 'add_address' %}" class="hover:text-white">Dirección</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-white mb-3">Contacto</h4>
+                <p class="text-sm">contacto@friendlecom.cl</p>
+                <p class="text-sm">+56 900000000</p>
+            </div>
+
+        </div>
+
+        <hr class="border-gray-700 my-8">
+
+        <div class="text-center text-sm text-gray-400">
+            © {% now "Y" %} FriendlEcom.
+        </div>
+    </div>
+  </footer>
   </body>
 </html>
