@@ -1,6 +1,7 @@
 {% extends 'myapp/base.html' %}
 <!--Comment-->
 {% block body %}
+{% load price_filters %}
 <h2 class="text-3xl font-semibold mb-8 text-gray-800">Tu Carro</h2>
 
 {% if cart %}
@@ -50,8 +51,8 @@
             </select>
           </td>
 
-          <td class="p-4 text-gray-700">${{ item.price }}</td>
-          <td class="p-4 text-gray-700">${{ item.total }}</td>
+          <td class="p-4 text-gray-700">${{ item.price|clp }}</td>
+          <td class="p-4 text-gray-700">${{ item.total|clp }}</td>
 
           <td class="p-4 space-x-2">
             <button
@@ -86,7 +87,7 @@
 <!--Cart Total-->
 <div class="mt-6 text-right pr-2">
   <strong class="text-lg text-gray-900"
-    >Total: ${{ cart.get_total_price}}</strong
+    >Total: ${{ cart.get_total_price|clp}}</strong
   >
 </div>
 <div class="flex justify-center">

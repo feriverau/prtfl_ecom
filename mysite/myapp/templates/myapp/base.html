@@ -23,9 +23,31 @@
           alt="Logo"
           class="h-10 w-10"
         /> -->
-        <span class="text-md font-semibold text-gray-800 px-4"
-          >☰ Categorías</span
-        >
+        <div class="relative group">
+          <button
+              class="px-4 py-2 text-md font-semibold text-gray-800 hover:text-blue-600 cursor-pointer"
+          >
+              ☰ Categorías ▾
+          </button>
+
+          <div
+              class="absolute top-full left-0 hidden group-hover:block w-56 bg-white rounded-lg shadow-lg border z-50"
+          >
+              {% for category_item in categories %}
+              <a
+                  href="{% url 'category' category_item.slug %}"
+                  class="block px-4 py-2 text-sm
+                  {% if category and category.slug == category_item.slug %}
+                      bg-gray-100 text-orange-500 font-semibold
+                  {% else %}
+                      text-gray-700 hover:bg-gray-100
+                  {% endif %}"
+              >
+                  {{ category_item.name }}
+              </a>
+              {% endfor %}
+          </div>
+        </div>
       </div>
 
       <!-- Navigation Links (Hidden on Mobile) -->
