@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
+import uuid
 
 # Create your models here.
 class Category(models.Model):
@@ -24,11 +25,16 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('detail',args=[self.slug])
 
+    def product_image_path(instance, filename):
+        ext = filename.split('.')[-1]
+        filename = f"{uuid.uuid4()}.{ext}"
+        return f"products/{filename}"
+
     name = models.CharField(max_length=100)
     price = models.IntegerField()
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="products",null=True,blank=True)
     description = models.TextField()
-    image = models.ImageField(upload_to='images/',default="images/ecom_default.png")
+    image = models.ImageField(upload_to=product_image_path,default="products/ecom_default.jpeg")    
     slug = models.SlugField(max_length=100,unique=True,blank=True)
     stock = models.IntegerField()
     active = models.BooleanField()
