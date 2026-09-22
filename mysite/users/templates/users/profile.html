@@ -1,6 +1,136 @@
-<h1>profile page</h1>
-<form method="POST">
-    {% csrf_token %}
-    {{user_form}}
-    <button type="submit">Update</button>
-</form>
+{% extends "myapp/base.html" %}
+
+{% block body %}
+{% load price_filters %}
+
+<div class="max-w-2xl mx-auto py-10">
+
+    <div class="bg-white shadow-lg rounded-xl p-8">
+
+        <h1 class="text-3xl font-bold text-center mb-8">
+            Mi perfil
+        </h1>
+
+        <div class="flex justify-center mb-8">
+            {% if request.user.profile.image %}
+                <img
+                    src="{{ request.user.profile.image.url }}"
+                    alt="Foto de perfil"
+                    class="w-40 h-40 rounded-full object-cover border-4 border-gray-200"
+                >
+            {% endif %}
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            <div class="mb-5">
+                <label class="block font-semibold mb-2">
+                    Nombre de usuario
+                </label>
+
+                {{ user_form.username }}
+            </div>
+
+            <div class="mb-5">
+                <label class="block font-semibold mb-2">
+                    Correo electrónico
+                </label>
+
+                {{ user_form.email }}
+            </div>
+
+            <div class="mb-8">
+                <label class="block font-semibold mb-2">
+                    Foto de perfil
+                </label>
+
+                <div class="space-y-3">
+                    {{ profile_form.image }}
+                </div>
+            </div>
+
+            <button
+                type="submit"
+                class="w-full bg-gray-900 text-white py-3 rounded-lg hover:bg-gray-700 transition">
+
+                Guardar cambios
+
+            </button>
+
+        </form>
+
+        <hr class="my-8">
+
+        <a
+            href="{% url 'add_address' %}"
+            class="block text-center bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 transition">
+
+            Mi dirección
+
+        </a>
+
+        <hr class="my-8">
+
+        <h2 class="text-2xl font-semibold mb-6">
+            Historial de pedidos
+        </h2>
+
+        {% if orders %}
+
+        <div class="space-y-4">
+
+            {% for order in orders %}
+
+            <a
+                href="{% url 'order-detail' order.id %}"
+                class="block border rounded-lg p-4 flex justify-between items-center hover:bg-gray-100 transition">
+
+                <div>
+                    <p class="font-semibold">
+                        Pedido #{{ order.id }}
+                    </p>
+
+                    <p class="text-sm text-gray-500">
+                        {{ order.created_at|date:"d/m/Y H:i" }}
+                    </p>
+                </div>
+
+                <div class="text-right">
+
+                    {% if order.is_paid %}
+                        <span class="text-green-600 font-semibold">
+                            Pagado
+                        </span>
+                    {% else %}
+                        <span class="text-yellow-600 font-semibold">
+                            Pendiente
+                        </span>
+                    {% endif %}
+
+                    <p class="font-bold text-lg">
+                        ${{ order.total_amount|clp }}
+                    </p>
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <p class="text-gray-500">
+            Aún no has realizado ningún pedido.
+        </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

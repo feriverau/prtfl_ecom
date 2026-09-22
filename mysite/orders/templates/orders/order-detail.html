@@ -1,0 +1,119 @@
+{% extends "myapp/base.html" %}
+
+{% block body %}
+{% load price_filters %}
+
+<div class="max-w-4xl mx-auto py-10">
+
+    <div class="bg-white shadow-lg rounded-xl p-8">
+
+        <h1 class="text-3xl font-bold mb-6">
+            Pedido #{{ order.id }}
+        </h1>
+
+
+        <div class="mb-8">
+
+            <p class="text-gray-600">
+                Fecha:
+                {{ order.created_at|date:"d/m/Y H:i" }}
+            </p>
+
+
+            {% if order.is_paid %}
+
+                <p class="text-green-600 font-semibold">
+                    Estado: Pagado
+                </p>
+
+            {% else %}
+
+                <p class="text-yellow-600 font-semibold">
+                    Estado: Pendiente
+                </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <hr class="my-6">
+
+
+        <h2 class="text-2xl font-semibold mb-4">
+            Productos
+        </h2>
+
+
+        <div class="space-y-4">
+
+            {% for item in order.items.all %}
+
+            <div class="flex items-center justify-between border rounded-lg p-4">
+
+
+                <div class="flex items-center space-x-4">
+
+                    <img
+                        src="{{ item.product.image.url }}"
+                        alt="{{ item.product.name }}"
+                        class="w-20 h-20 object-contain rounded"
+                    >
+
+
+                    <div>
+
+                        <a
+                            href="{{ item.product.get_absolute_url }}"
+                            class="font-semibold text-lg">
+
+                            {{ item.product.name }}
+
+                        </a>
+
+
+                        <p class="text-gray-500">
+                            Cantidad:
+                            {{ item.quantity }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="font-bold">
+
+                    ${{ item.total_price|clp }}
+
+                </div>
+
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+
+        <hr class="my-6">
+
+
+        <div class="flex justify-between text-xl font-bold">
+
+            <span>
+                Total
+            </span>
+
+            <span>
+                ${{ order.total_amount|clp }}
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+{% endblock %}

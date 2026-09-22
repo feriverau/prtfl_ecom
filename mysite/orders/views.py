@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from .forms import AddressForm
 from .models import Address,Order,OrderItem
 from cart.cart import Cart
@@ -52,6 +52,23 @@ def place_order(request):
                 OrderItem.objects.create(order=order,product=item['product'],quantity=item['qty'])
                 order_success=True
     return JsonResponse({'success':order_success})
+
+@login_required
+def order_detail(request, order_id):
+
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user
+    )
+
+    return render(
+        request,
+        'orders/order-detail.html',
+        {
+            'order': order
+        }
+    )
 
 def order_success(request):
     return render(request,'orders/order-success.html')

@@ -7,8 +7,10 @@ from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.utils.encoding import force_bytes,force_str
 from .token import account_activation_token
 from django.contrib.auth.models import User
-from .forms import LoginForm,UserUpdateForm
+from .forms import LoginForm,UserUpdateForm,ProfileUpdateForm
 from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+from orders.models import Order
 
 # Create your views here.
 
@@ -74,12 +76,51 @@ def user_logout(request):
     return redirect('index')
 
 
+@login_required
 def profile(request):
-    if request.method=="POST":
-        user_form = UserUpdateForm(request.POST,instance=request.user)
-        if user_form.is_valid():
-            user_form.save()
-            return redirect('index')
 
-    user_form = UserUpdateForm(instance=request.user)
-    return render(request,'users/profile.html',{'user_form':user_form})
+    if request.method == "POST":
+
+        user_form = UserUpdateForm(
+            request.POST,
+            instance=request.user
+        )
+
+        profile_form = ProfileUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=request.user.profile
+        )
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+
+            return redirect("profile")
+
+    else:
+
+        user_form = UserUpdateForm(
+            instance=request.user
+        )
+
+        profile_form = ProfileUpdateForm(
+            instance=request.user.profile
+        )
+
+    orders = (
+        Order.objects
+        .filter(user=request.user)
+        .prefetch_related("items__product")
+        .order_by("-created_at")
+    )
+
+    return render(
+        request,
+        "users/profile.html",
+        {
+            "user_form": user_form,
+            "profile_form": profile_form,
+            "orders": orders,
+        },
+    )

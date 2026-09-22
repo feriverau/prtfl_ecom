@@ -7,4 +7,5 @@ urlpatterns=[
     path('place-order',views.place_order,name='place-order'),
     path('order-success',views.order_success,name='order-success'),
     path('order-failed',views.order_failed,name='order-failed'),
+    path('order/<int:order_id>',views.order_detail,name='order-detail'),
 ]

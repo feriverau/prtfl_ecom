@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth.models import User
 from django import forms
+from .models import Profile
 
 class CreateUserForm(UserCreationForm):
     class Meta:
@@ -25,3 +26,21 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ['username','email']
         exclude = ['password1','password2']
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['image']
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileUpdateForm, self).__init__(*args, **kwargs)
+
+        self.fields['image'].widget.attrs.update({
+            'class': 
+            'w-full text-sm text-gray-500 '
+            'file:mr-4 file:py-2 file:px-4 '
+            'file:rounded-lg file:border-0 '
+            'file:text-sm file:font-semibold '
+            'file:bg-orange-500 file:text-white '
+            'hover:file:bg-orange-600'
+        })
