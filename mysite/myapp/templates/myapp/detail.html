@@ -3,10 +3,10 @@
 {% load humanize %}
 {% load price_filters %}
 <!--Outermost Container-->
-<div class="max-w-7xl mx-auto grid grid-cols-3 gap-10">
+<div class="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
     <!--Product Image-->
-    <div class="col-span-1">
-        <div class="bg-white rounded-lg shadow-sm p-6 flex justify-center items-center h-96">
+    <div class="w-full">
+        <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 flex justify-center items-center h-72 md:h-96">
             <img
                 class="max-w-full max-h-full object-contain"
                 src="{{ product.image.url }}"
@@ -18,7 +18,7 @@
     <div class="col-span-1 space-y-4">
         <h1 class="text-2xl font-semibold text-gray-900">{{product.name}}</h1>
         <div class="text-yellow-500">★★★★☆<span class="text-gray-900">(213)</span></div>
-        <p class="text-3xl font-bald text-green-500">$ {{product.price|clp}}</p>
+        <p class="text-3xl font-bold text-green-500">$ {{product.price|clp}}</p>
         <p class="text-sm text-green-700 font-medium">Impuestos incluidos</p>
         <ul>
             <li>{{product.description}}</li>
@@ -28,7 +28,7 @@
     <div class="col-span-1 border rounded-lg p-6 space-y-4 shadow-md">
         <p class="text-2xl font-semibold text-gray-900">$ {{product.price|clp}}</p>
         <div>
-            <select name="" id="select">
+            <select name="" id="select" >
                 <option value="">1</option>
                 <option value="">2</option>
                 <option value="">3</option>
@@ -43,12 +43,12 @@
         <button 
             id="atc" 
             value="{{product.id}}"
-            class="w-full bg-yellow-400 text-black font-semibold py-2 rounded-lg"
+            class="w-full bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600 transition-colors duration-150 text-black font-semibold py-3 rounded-lg"
         >
             Agregar al carro
         </button>
         <a href="{% url 'cart-overview' %}"
-            class="block w-full bg-gray-900 text-white font-semibold py-2 rounded-lg text-center">
+            class="block w-full bg-gray-900 hover:bg-gray-800 active:bg-black transition-colors duration-150 text-white font-semibold py-3 rounded-lg text-center">
             Comprar ahora
         </a>
         <!-- <button class="w-full bg-gray-900 text-white font-semibold py-2 rounded-lg">Comprar ahora</button> -->
