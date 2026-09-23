@@ -3,22 +3,22 @@
 {% load humanize %}
 {% load price_filters %}
     <div>
-        <h1 class="text-2xl px-32 pt-10">Ofertas del día</h1>
-        <div class="px-32">
+        <h1 class="text-2xl px-4 md:px-32 pt-10">Ofertas del día</h1>
+        <div class="px-4 md:px-3">
             <hr class="border-t border-gray-300 my-6">
         </div>
-        <div class="grid grid-cols-4 px-32 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 px-4 md:px-32 gap-6">
             {% for product in page_obj %}
-            <div class="rounded-lg shadow-lg p-4">
+            <div class="rounded-lg shadow-lg p-4 overflow-hidden">
                 <a href="{{ product.get_absolute_url }}">
                     <img
-                        class="rounded-md mb-4 w-80 h-80 object-contain mx-auto"
+                        class="rounded-md mb-4 w-full h-64 object-contain mx-auto"
                         src="{{ product.image.url }}"
                         alt="{{ product.name }}"
                     >
                 </a>
-                <a class="text-lg font-semibold" href="{{product.get_absolute_url}}">{{product.name}}</a>
-                <p class="text-gray-600">{{product.description}}</p>
+                <a class="text-lg font-semibold block" href="{{product.get_absolute_url}}">{{product.name}}</a>
+                <p class="text-gray-600 line-clamp-2">{{product.description}}</p>
                 <p class="text-green-500 font-bold mt-2 text-lg">${{product.price|clp}}</p>
             </div>
             {% endfor %}

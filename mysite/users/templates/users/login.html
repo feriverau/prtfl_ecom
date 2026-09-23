@@ -21,9 +21,17 @@
             <label for="">Contraseña</label>
             <div class="border rounded p-2">{{form.password}}</div>
         </div>
-        <button class="bg-gray-900 px-2 py-2 w-full text-white rounded-md font-semibold">Ingresar</button>
-        <a href="{% url 'register' %}"
-            class="block w-full bg-gray-900 text-white font-semibold py-2 rounded-md text-center">
+        <button
+            type="submit"
+            class="w-full h-12 bg-gray-900 hover:bg-gray-800 active:bg-black active:scale-[0.98] transition-all duration-150 text-white font-semibold rounded-lg flex items-center justify-center"
+        >
+            Ingresar
+        </button>
+
+        <a
+            href="{% url 'register' %}"
+            class="w-full h-12 bg-gray-900 hover:bg-gray-800 active:bg-black active:scale-[0.98] transition-all duration-150 text-white font-semibold rounded-lg flex items-center justify-center"
+        >
             Registrarse
         </a>
 
