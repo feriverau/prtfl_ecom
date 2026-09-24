@@ -37,12 +37,42 @@
                     class="absolute top-full left-0 hidden group-hover:block w-56 bg-white shadow-lg border z-50 rounded-md"
                 >
                     {% for category_item in categories %}
-                    <a
-                        href="{% url 'category' category_item.slug %}"
-                        class="block px-4 py-2 hover:bg-gray-100"
-                    >
-                        {{ category_item.name }}
-                    </a>
+
+                        {% if category_item.subcategories.all %}
+
+                            <div class="relative group/category">
+                                <div
+                                    class="flex items-center justify-between px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                >
+                                    <span>{{ category_item.name }}</span>
+                                    <span>›</span>
+                                </div>
+
+                                <div
+                                    class="absolute left-full top-0 hidden group-hover/category:block w-56 bg-white shadow-lg border rounded-md"
+                                >
+                                    {% for subcategory in category_item.subcategories.all %}
+                                        <a
+                                            href="{% url 'category' subcategory.slug %}"
+                                            class="block px-4 py-2 hover:bg-gray-100"
+                                        >
+                                            {{ subcategory.name }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                        {% else %}
+
+                            <a
+                                href="{% url 'category' category_item.slug %}"
+                                class="block px-4 py-2 hover:bg-gray-100"
+                            >
+                                {{ category_item.name }}
+                            </a>
+
+                        {% endif %}
+
                     {% endfor %}
                 </div>
             </div>
