@@ -6,15 +6,35 @@ from django.db.models import Q
 # Create your views here.
 
 def index(request):
-    products = Product.objects.all().order_by("id")
-    paginator = Paginator(products,4)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    return render(request,'myapp/index.html',{'page_obj':page_obj})
 
-def detail(request,slug):
-    product = Product.objects.get(slug=slug)
-    return render(request,'myapp/detail.html',{'product':product})
+    products = Product.objects.all().order_by("id")
+
+    paginator = Paginator(products, 4)
+
+    page_number = request.GET.get("page")
+
+    page_obj = paginator.get_page(page_number)
+
+    offers = get_offers()
+
+    return render(
+        request,
+        'myapp/index.html',
+        {
+            'page_obj': page_obj,
+            'offers': offers,
+        }
+    )
+
+def detail(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+
+    compatible_products = get_compatible_products(product)
+
+    return render(request, "myapp/detail.html", {
+        "product": product,
+        "compatible_products": compatible_products,
+    })
 
 def search(request):
 
@@ -43,13 +63,71 @@ def search(request):
 
 
 def category(request, slug):
+    category = get_object_or_404(Category, slug=slug)
 
-    category = get_object_or_404(Category,slug=slug)
+    subcategories = category.subcategories.all()
 
-    products = (Product.objects.filter(category=category,active=True).order_by("name"))
+    if subcategories.exists():
+        return render(request, "myapp/category.html", {
+            "category": category,
+            "subcategories": subcategories,
+        })
+
+    products = Product.objects.filter(
+        category=category,
+        active=True
+    ).order_by("name")
 
     paginator = Paginator(products, 4)
+
     page_number = request.GET.get("page")
+
     page_obj = paginator.get_page(page_number)
 
-    return render(request,"myapp/category.html",{"category":category,"page_obj":page_obj,})
+    return render(request, "myapp/category.html", {
+        "category": category,
+        "page_obj": page_obj,
+    })
+
+
+def get_compatible_products(product):
+    compatible_products = {
+        "processors": Product.objects.none(),
+        "motherboards": Product.objects.none(),
+        "ram": Product.objects.none(),
+    }
+
+    if product.product_type == "processor":
+        compatible_products["motherboards"] = Product.objects.filter(
+            product_type="motherboard",
+            socket=product.socket,
+            active=True
+        )
+
+    elif product.product_type == "motherboard":
+        compatible_products["processors"] = Product.objects.filter(
+            product_type="processor",
+            socket=product.socket,
+            active=True
+        )
+
+        compatible_products["ram"] = Product.objects.filter(
+            product_type="ram",
+            memory_type=product.memory_type,
+            active=True
+        )
+
+    elif product.product_type == "ram":
+        compatible_products["motherboards"] = Product.objects.filter(
+            product_type="motherboard",
+            memory_type=product.memory_type,
+            active=True
+        )
+
+    return compatible_products
+
+def get_offers():
+    return Product.objects.filter(
+        active=True,
+        is_offer=True
+    ).order_by("id")

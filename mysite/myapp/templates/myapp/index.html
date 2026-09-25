@@ -2,36 +2,187 @@
 {% block body %}
 {% load humanize %}
 {% load price_filters %}
-    <div>
-        <h1 class="text-2xl px-4 md:px-32 pt-10">Ofertas del día</h1>
-        <div class="px-4 md:px-3">
-            <hr class="border-t border-gray-300 my-6">
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 px-4 md:px-32 gap-6">
-            {% for product in page_obj %}
-            <div class="rounded-lg shadow-lg p-4 overflow-hidden">
-                <a href="{{ product.get_absolute_url }}">
-                    <img
-                        class="rounded-md mb-4 w-full h-64 object-contain mx-auto"
-                        src="{{ product.image.url }}"
-                        alt="{{ product.name }}"
-                    >
-                </a>
-                <a class="text-lg font-semibold block" href="{{product.get_absolute_url}}">{{product.name}}</a>
-                <p class="text-gray-600 line-clamp-2">{{product.description}}</p>
-                <p class="text-green-500 font-bold mt-2 text-lg">${{product.price|clp}}</p>
-            </div>
-            {% endfor %}
-        </div>
 
-        <div class="flex items-center justify-center space-x-4 py-4">
-            {% if page_obj.has_previous %}
-            <a href="?page={{page_obj.previous_page_number}}" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">Anterior</a>
-            {% endif %}
-            <span>{{page_obj.number}} de {{page_obj.paginator.num_pages}}</span>
-            {% if page_obj.has_next %}
-            <a href="?page={{page_obj.next_page_number}}" class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition">Siguiente</a>
-            {% endif %}
-        </div>
+<div>
+
+```
+<!-- Ofertas del día -->
+<section class="px-4 md:px-32 pt-10">
+
+    <h1 class="text-2xl font-semibold">
+        Ofertas del día
+    </h1>
+
+    <div class="mt-6">
+        <hr class="border-t border-gray-300">
     </div>
+
+    {% if offers %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+
+        {% for product in offers %}
+        <div class="rounded-lg shadow-lg p-4 overflow-hidden">
+
+            <a href="{{ product.get_absolute_url }}">
+                <img
+                    class="rounded-md mb-4 w-full h-64 object-contain mx-auto"
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                >
+            </a>
+
+            <a
+                class="text-lg font-semibold block"
+                href="{{ product.get_absolute_url }}"
+            >
+                {{ product.name }}
+            </a>
+
+            <p class="text-gray-600 line-clamp-2">
+                {{ product.description }}
+            </p>
+
+            <p class="text-green-500 font-bold mt-2 text-lg">
+                ${{ product.price|clp }}
+            </p>
+
+        </div>
+        {% endfor %}
+
+    </div>
+    {% else %}
+    <p class="text-gray-500 mt-6">
+        No hay ofertas disponibles actualmente.
+    </p>
+    {% endif %}
+
+</section>
+
+
+<!-- Categorías -->
+<section class="px-4 md:px-32 pt-12">
+
+    <h2 class="text-2xl font-semibold">
+        Categorías
+    </h2>
+
+    <div class="mt-6">
+        <hr class="border-t border-gray-300">
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+
+        {% for category in categories %}
+        <a
+            href="{% url 'category' category.slug %}"
+            class="group rounded-lg border bg-white overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+        >
+
+            <div class="h-40 flex items-center justify-center bg-gray-50">
+
+                {% if category.image %}
+                <img
+                    src="{{ category.image.url }}"
+                    alt="{{ category.name }}"
+                    class="max-w-full max-h-full object-contain"
+                >
+                {% else %}
+                <span class="text-gray-400 text-sm">
+                    {{ category.name }}
+                </span>
+                {% endif %}
+
+            </div>
+
+            <div class="p-4 text-center">
+                <h3 class="font-semibold text-gray-900 group-hover:text-blue-600">
+                    {{ category.name }}
+                </h3>
+            </div>
+
+        </a>
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- Todos los productos -->
+<section class="px-4 md:px-32 pt-12">
+
+    <h2 class="text-2xl font-semibold">
+        Todos los productos
+    </h2>
+
+    <div class="mt-6">
+        <hr class="border-t border-gray-300">
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+
+        {% for product in page_obj %}
+        <div class="rounded-lg shadow-lg p-4 overflow-hidden">
+
+            <a href="{{ product.get_absolute_url }}">
+                <img
+                    class="rounded-md mb-4 w-full h-64 object-contain mx-auto"
+                    src="{{ product.image.url }}"
+                    alt="{{ product.name }}"
+                >
+            </a>
+
+            <a
+                class="text-lg font-semibold block"
+                href="{{ product.get_absolute_url }}"
+            >
+                {{ product.name }}
+            </a>
+
+            <p class="text-gray-600 line-clamp-2">
+                {{ product.description }}
+            </p>
+
+            <p class="text-green-500 font-bold mt-2 text-lg">
+                ${{ product.price|clp }}
+            </p>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-center space-x-4 py-6">
+
+        {% if page_obj.has_previous %}
+        <a
+            href="?page={{ page_obj.previous_page_number }}"
+            class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+        >
+            Anterior
+        </a>
+        {% endif %}
+
+        <span>
+            {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+        <a
+            href="?page={{ page_obj.next_page_number }}"
+            class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+        >
+            Siguiente
+        </a>
+        {% endif %}
+
+    </div>
+
+</section>
+```
+
+</div>
+
 {% endblock %}

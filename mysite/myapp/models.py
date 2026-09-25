@@ -15,6 +15,11 @@ class Category(models.Model):
         blank=True,
         related_name="subcategories"
     )
+    image = models.ImageField(
+        upload_to="categories/",
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.name
@@ -61,6 +66,19 @@ class Product(models.Model):
         null=True
     )
 
+    PRODUCT_TYPES = [
+        ("processor", "Procesador"),
+        ("motherboard", "Placa Madre"),
+        ("ram", "RAM"),
+    ]
+
+    product_type = models.CharField(
+        max_length=20,
+        choices=PRODUCT_TYPES,
+        blank=True,
+        null=True
+    )
+
     description = models.TextField()
     image = models.ImageField(
         upload_to=product_image_path,
@@ -69,6 +87,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=100, unique=True, blank=True)
     stock = models.IntegerField()
     active = models.BooleanField()
+    is_offer = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.slug:

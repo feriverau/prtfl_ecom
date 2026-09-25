@@ -2,9 +2,16 @@
 {% block body %}
 {% load humanize %}
 {% load price_filters %}
-<!--Outermost Container-->
-<div class="max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-    <!--Product Image-->
+
+<!-- Outermost Container -->
+
+<div class="max-w-7xl mx-auto px-4 md:px-8">
+
+```
+<!-- Product main section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- Product Image -->
     <div class="w-full">
         <div class="bg-white rounded-lg shadow-sm p-4 md:p-6 flex justify-center items-center h-72 md:h-96">
             <img
@@ -14,63 +21,285 @@
             >
         </div>
     </div>
-    <!--Product details-->
-    <div class="col-span-1 space-y-4">
-        <h1 class="text-2xl font-semibold text-gray-900">{{product.name}}</h1>
-        <div class="text-yellow-500">★★★★☆<span class="text-gray-900">(213)</span></div>
-        <p class="text-3xl font-bold text-green-500">$ {{product.price|clp}}</p>
-        <p class="text-sm text-green-700 font-medium">Impuestos incluidos</p>
-        <ul>
-            <li>{{product.description}}</li>
-        </ul>
-    </div>
-    <!--Buy Box-->
-    <div class="col-span-1 border rounded-lg p-6 space-y-4 shadow-md">
-        <p class="text-2xl font-semibold text-gray-900">$ {{product.price|clp}}</p>
+
+    <!-- Product details -->
+    <div class="col-span-1 space-y-5">
+
         <div>
-            <select name="" id="select" >
+            <h1 class="text-2xl font-semibold text-gray-900">
+                {{ product.name }}
+            </h1>
+
+            <div class="text-yellow-500 mt-2">
+                ★★★★☆
+                <span class="text-gray-900">(213)</span>
+            </div>
+        </div>
+
+        <div>
+            <p class="text-3xl font-bold text-green-500">
+                $ {{ product.price|clp }}
+            </p>
+
+            <p class="text-sm text-green-700 font-medium">
+                Impuestos incluidos
+            </p>
+        </div>
+
+        <!-- Description -->
+        <div>
+            <h2 class="text-lg font-semibold text-gray-900 mb-2">
+                Descripción
+            </h2>
+
+            <p class="text-gray-700 leading-relaxed">
+                {{ product.description }}
+            </p>
+        </div>
+
+        <!-- Technical specifications -->
+        {% if product.product_type or product.socket or product.memory_type %}
+        <div class="border-t pt-5">
+            <h2 class="text-lg font-semibold text-gray-900 mb-3">
+                Especificaciones técnicas
+            </h2>
+
+            <div class="border rounded-lg overflow-hidden">
+
+                {% if product.product_type %}
+                <div class="flex justify-between px-4 py-3 bg-gray-50 border-b">
+                    <span class="font-medium text-gray-700">Tipo</span>
+
+                    <span class="text-gray-900">
+                        {{ product.get_product_type_display }}
+                    </span>
+                </div>
+                {% endif %}
+
+                {% if product.socket %}
+                <div class="flex justify-between px-4 py-3 border-b">
+                    <span class="font-medium text-gray-700">Socket</span>
+
+                    <span class="text-gray-900">
+                        {{ product.socket }}
+                    </span>
+                </div>
+                {% endif %}
+
+                {% if product.memory_type %}
+                <div class="flex justify-between px-4 py-3 bg-gray-50">
+                    <span class="font-medium text-gray-700">Memoria</span>
+
+                    <span class="text-gray-900">
+                        {{ product.memory_type }}
+                    </span>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Buy Box -->
+    <div class="col-span-1 border rounded-lg p-6 space-y-4 shadow-md h-fit">
+
+        <p class="text-2xl font-semibold text-gray-900">
+            $ {{ product.price|clp }}
+        </p>
+
+        <div>
+            <select name="" id="select">
                 <option value="">1</option>
                 <option value="">2</option>
                 <option value="">3</option>
             </select>
         </div>
-        <p class="text-sm text-green-700">Envío GRATIS para mañana</p>
+
+        <p class="text-sm text-green-700">
+            Envío GRATIS para mañana
+        </p>
+
         {% if product.stock %}
-        <p class="text-sm text-green-700">En stock</p>
+            <p class="text-sm text-green-700">
+                En stock
+            </p>
         {% else %}
-        <p class="text-sm text-red-700">Sin stock</p>
+            <p class="text-sm text-red-700">
+                Sin stock
+            </p>
         {% endif %}
-        <button 
-            id="atc" 
-            value="{{product.id}}"
+
+        <button
+            id="atc"
+            value="{{ product.id }}"
             class="w-full bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600 transition-colors duration-150 text-black font-semibold py-3 rounded-lg"
         >
             Agregar al carro
         </button>
-        <a href="{% url 'cart-overview' %}"
-            class="block w-full bg-gray-900 hover:bg-gray-800 active:bg-black transition-colors duration-150 text-white font-semibold py-3 rounded-lg text-center">
+
+        <a
+            href="{% url 'cart-overview' %}"
+            class="block w-full bg-gray-900 hover:bg-gray-800 active:bg-black transition-colors duration-150 text-white font-semibold py-3 rounded-lg text-center"
+        >
             Comprar ahora
         </a>
-        <!-- <button class="w-full bg-gray-900 text-white font-semibold py-2 rounded-lg">Comprar ahora</button> -->
-        <p class="text-sm text-green-600">Vendido por: Guarever</p>
+
+        <p class="text-sm text-green-600">
+            Vendido por: Guarever
+        </p>
+
     </div>
+
 </div>
+
+<!-- Compatible products -->
+{% if compatible_products.processors or compatible_products.motherboards or compatible_products.ram %}
+<div class="mt-12 border-t pt-8">
+
+    <h2 class="text-2xl font-semibold text-gray-900 mb-6">
+        Productos compatibles
+    </h2>
+
+    <!-- Compatible processors -->
+    {% if compatible_products.processors %}
+    <div class="mb-8">
+
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+            Procesadores
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+            {% for compatible_product in compatible_products.processors %}
+            <a
+                href="{{ compatible_product.get_absolute_url }}"
+                class="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white"
+            >
+                <div class="h-32 flex justify-center items-center mb-3">
+                    <img
+                        src="{{ compatible_product.image.url }}"
+                        alt="{{ compatible_product.name }}"
+                        class="max-w-full max-h-full object-contain"
+                    >
+                </div>
+
+                <h4 class="font-semibold text-gray-900">
+                    {{ compatible_product.name }}
+                </h4>
+
+                <p class="text-green-600 font-bold mt-2">
+                    $ {{ compatible_product.price|clp }}
+                </p>
+            </a>
+            {% endfor %}
+
+        </div>
+
+    </div>
+    {% endif %}
+
+    <!-- Compatible motherboards -->
+    {% if compatible_products.motherboards %}
+    <div class="mb-8">
+
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+            Placas Madre
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+            {% for compatible_product in compatible_products.motherboards %}
+            <a
+                href="{{ compatible_product.get_absolute_url }}"
+                class="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white"
+            >
+                <div class="h-32 flex justify-center items-center mb-3">
+                    <img
+                        src="{{ compatible_product.image.url }}"
+                        alt="{{ compatible_product.name }}"
+                        class="max-w-full max-h-full object-contain"
+                    >
+                </div>
+
+                <h4 class="font-semibold text-gray-900">
+                    {{ compatible_product.name }}
+                </h4>
+
+                <p class="text-green-600 font-bold mt-2">
+                    $ {{ compatible_product.price|clp }}
+                </p>
+            </a>
+            {% endfor %}
+
+        </div>
+
+    </div>
+    {% endif %}
+
+    <!-- Compatible RAM -->
+    {% if compatible_products.ram %}
+    <div class="mb-2">
+
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">
+            Memoria RAM
+        </h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+
+            {% for compatible_product in compatible_products.ram %}
+            <a
+                href="{{ compatible_product.get_absolute_url }}"
+                class="border rounded-lg p-4 hover:shadow-md transition-shadow bg-white"
+            >
+                <div class="h-32 flex justify-center items-center mb-3">
+                    <img
+                        src="{{ compatible_product.image.url }}"
+                        alt="{{ compatible_product.name }}"
+                        class="max-w-full max-h-full object-contain"
+                    >
+                </div>
+
+                <h4 class="font-semibold text-gray-900">
+                    {{ compatible_product.name }}
+                </h4>
+
+                <p class="text-green-600 font-bold mt-2">
+                    $ {{ compatible_product.price|clp }}
+                </p>
+            </a>
+            {% endfor %}
+
+        </div>
+
+    </div>
+    {% endif %}
+
+</div>
+{% endif %}
+```
+
+</div>
+
 <script>
-    $(document).on("click","#atc", function(e){
+    $(document).on("click", "#atc", function(e){
         console.log("Botón del carro clickeado");
+
         $.ajax({
-            type:"POST",
+            type: "POST",
             url: '{% url "cart_add" %}',
             data: {
                 csrfmiddlewaretoken: "{{csrf_token}}",
                 product_id: $("#atc").val(),
                 product_quantity: $("#select option:selected").text(),
             },
-            success:function (json) {
+            success: function(json) {
                 console.log(json);
-                document.getElementById("cart-qty").textContent=json.qty;
+                document.getElementById("cart-qty").textContent = json.qty;
             },
         });
     });
 </script>
+
 {% endblock %}
