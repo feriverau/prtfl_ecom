@@ -5,7 +5,7 @@
 
 <div>
 
-```
+
 <!-- Ofertas del día -->
 <section class="px-4 md:px-32 pt-10">
 
@@ -109,6 +109,7 @@
 
 
 <!-- Todos los productos -->
+<!-- Todos los productos -->
 <section class="px-4 md:px-32 pt-12">
 
     <h2 class="text-2xl font-semibold">
@@ -119,37 +120,13 @@
         <hr class="border-t border-gray-300">
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
-
+    <div
+        id="products-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-6"
+    >
         {% for product in page_obj %}
-        <div class="rounded-lg shadow-lg p-4 overflow-hidden">
-
-            <a href="{{ product.get_absolute_url }}">
-                <img
-                    class="rounded-md mb-4 w-full h-64 object-contain mx-auto"
-                    src="{{ product.image.url }}"
-                    alt="{{ product.name }}"
-                >
-            </a>
-
-            <a
-                class="text-lg font-semibold block"
-                href="{{ product.get_absolute_url }}"
-            >
-                {{ product.name }}
-            </a>
-
-            <p class="text-gray-600 line-clamp-2">
-                {{ product.description }}
-            </p>
-
-            <p class="text-green-500 font-bold mt-2 text-lg">
-                ${{ product.price|clp }}
-            </p>
-
-        </div>
+            {% include "myapp/includes/product_card.html" %}
         {% endfor %}
-
     </div>
 
 
@@ -181,7 +158,6 @@
     </div>
 
 </section>
-```
 
 </div>
 
