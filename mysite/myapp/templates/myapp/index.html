@@ -109,7 +109,6 @@
 
 
 <!-- Todos los productos -->
-<!-- Todos los productos -->
 <section class="px-4 md:px-32 pt-12">
 
     <h2 class="text-2xl font-semibold">
@@ -129,36 +128,87 @@
         {% endfor %}
     </div>
 
-
-    <!-- Pagination -->
-    <div class="flex items-center justify-center space-x-4 py-6">
+    {% if page_obj.has_next or page_obj.has_previous %}
+    <div class="flex items-center justify-center gap-4 py-8">
 
         {% if page_obj.has_previous %}
-        <a
-            href="?page={{ page_obj.previous_page_number }}"
-            class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+        <button
+            id="previous-products"
+            data-page="{{ page_obj.previous_page_number }}"
+            class="px-5 py-2 rounded-lg bg-gray-900 text-white font-semibold hover:bg-gray-800 transition"
         >
-            Anterior
-        </a>
+            ← Anterior
+        </button>
         {% endif %}
 
-        <span>
+        <span
+            id="products-page"
+            class="text-gray-600"
+        >
             {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
         </span>
 
         {% if page_obj.has_next %}
-        <a
-            href="?page={{ page_obj.next_page_number }}"
-            class="px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 transition"
+        <button
+            id="next-products"
+            data-page="{{ page_obj.next_page_number }}"
+            class="px-5 py-2 rounded-lg bg-gray-900 text-white font-semibold hover:bg-gray-800 transition"
         >
-            Siguiente
-        </a>
+            Siguiente →
+        </button>
         {% endif %}
 
     </div>
+    {% endif %}
 
 </section>
 
 </div>
+
+<script>
+    $(document).on("click", "#next-products, #previous-products", function () {
+
+        const button = $(this);
+        const page = button.data("page");
+
+        button.prop("disabled", true);
+
+        $.ajax({
+            type: "GET",
+            url: "{% url 'index' %}",
+            data: {
+                page: page
+            },
+
+            success: function (response) {
+
+                const newProducts = $(response)
+                    .find("#products-grid")
+                    .html();
+
+                $("#products-grid").html(newProducts);
+
+                const newPagination = $(response)
+                    .find("#products-page")
+                    .parent()
+                    .html();
+
+                $("#products-page")
+                    .parent()
+                    .html(newPagination);
+
+            },
+
+            error: function () {
+
+                button.prop("disabled", false);
+
+                alert("No se pudieron cargar los productos.");
+
+            }
+        });
+
+    });
+</script>
 
 {% endblock %}
