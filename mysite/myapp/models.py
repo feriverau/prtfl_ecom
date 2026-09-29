@@ -89,6 +89,9 @@ class Product(models.Model):
     active = models.BooleanField()
     is_offer = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.name} ({self.id})"
+
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(self.name)
