@@ -183,18 +183,26 @@ MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/"
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    "default": {
-        "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
-        "OPTIONS": {
-            "host": "smtp.gmail.com",
-            "port": 587,
-            "use_tls": True,
-            "username": os.getenv("EMAIL_HOST_USER"),
-            "password": os.getenv("EMAIL_HOST_PASSWORD"),
-        },
-    },
+# MAILERS = {
+#     "default": {
+#         "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
+#         "OPTIONS": {
+#             "host": "smtp.gmail.com",
+#             "port": 587,
+#             "use_tls": True,
+#             "username": os.getenv("EMAIL_HOST_USER"),
+#             "password": os.getenv("EMAIL_HOST_PASSWORD"),
+#         },
+#     },
+# }
+
+EMAIL_BACKEND = "anymail.backends.resend.EmailBackend"
+
+ANYMAIL = {
+    "RESEND_API_KEY": os.environ["RESEND_API_KEY"],
 }
+
+DEFAULT_FROM_EMAIL = "onboarding@resend.dev"
 
 LOGIN_URL = 'login'
 
