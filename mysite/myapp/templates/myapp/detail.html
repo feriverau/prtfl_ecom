@@ -150,6 +150,76 @@
             Vendido por: Guarever
         </p>
 
+        {% if product.product_type == "processor" or product.product_type == "motherboard" or product.product_type == "ram" %}
+
+        <div
+            id="build-status"
+            class="mt-6 border-t pt-5"
+        >
+
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                Tu armado
+            </h2>
+
+            <div class="space-y-3">
+
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-700">
+                        Procesador
+                    </span>
+
+                    <span
+                        id="build-processor"
+                        class="{% if build_status.processor %}text-green-600{% else %}text-gray-400{% endif %} font-medium"
+                    >
+                        {% if build_status.processor %}
+                            ✓ Agregado
+                        {% else %}
+                            ○ Falta
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-700">
+                        Placa Madre
+                    </span>
+
+                    <span
+                        id="build-motherboard"
+                        class="{% if build_status.motherboard %}text-green-600{% else %}text-gray-400{% endif %} font-medium"
+                    >
+                        {% if build_status.motherboard %}
+                            ✓ Agregada
+                        {% else %}
+                            ○ Falta
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-700">
+                        RAM
+                    </span>
+
+                    <span
+                        id="build-ram"
+                        class="{% if build_status.ram %}text-green-600{% else %}text-gray-400{% endif %} font-medium"
+                    >
+                        {% if build_status.ram %}
+                            ✓ Agregada
+                        {% else %}
+                            ○ Falta
+                        {% endif %}
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
     </div>
 
 </div>
@@ -295,8 +365,47 @@
                 product_quantity: $("#select option:selected").text(),
             },
             success: function(json) {
+
                 console.log(json);
+
                 document.getElementById("cart-qty").textContent = json.qty;
+
+                if (json.build) {
+
+                    const processor = document.getElementById("build-processor");
+                    const motherboard = document.getElementById("build-motherboard");
+                    const ram = document.getElementById("build-ram");
+
+                    if (processor) {
+                        processor.textContent = json.build.processor
+                            ? "✓ Agregado"
+                            : "○ Falta";
+
+                        processor.className = json.build.processor
+                            ? "text-green-600 font-medium"
+                            : "text-gray-400 font-medium";
+                    }
+
+                    if (motherboard) {
+                        motherboard.textContent = json.build.motherboard
+                            ? "✓ Agregada"
+                            : "○ Falta";
+
+                        motherboard.className = json.build.motherboard
+                            ? "text-green-600 font-medium"
+                            : "text-gray-400 font-medium";
+                    }
+
+                    if (ram) {
+                        ram.textContent = json.build.ram
+                            ? "✓ Agregada"
+                            : "○ Falta";
+
+                        ram.className = json.build.ram
+                            ? "text-green-600 font-medium"
+                            : "text-gray-400 font-medium";
+                    }
+                }
             },
         });
     });

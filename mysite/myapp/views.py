@@ -2,6 +2,7 @@ from django.shortcuts import render,get_object_or_404
 from .models import Product,Category
 from django.core.paginator import Paginator
 from django.db.models import Q
+from cart.cart import Cart
 
 # Create your views here.
 
@@ -31,9 +32,13 @@ def detail(request, slug):
 
     compatible_products = get_compatible_products(product)
 
+    cart = Cart(request)
+    build_status = cart.get_build_status()
+
     return render(request, "myapp/detail.html", {
         "product": product,
         "compatible_products": compatible_products,
+        "build_status": build_status,
     })
 
 def search(request):

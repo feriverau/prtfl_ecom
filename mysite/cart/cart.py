@@ -12,6 +12,22 @@ class Cart():
     def __len__(self):
         return sum (int(item['qty']) for item in self.cart.values())
 
+    def get_build_status(self):
+        products = Product.objects.filter(
+            id__in=self.cart.keys()
+        )
+
+        product_types = {
+            product.product_type
+            for product in products
+        }
+
+        return {
+            "processor": "processor" in product_types,
+            "motherboard": "motherboard" in product_types,
+            "ram": "ram" in product_types,
+        }
+
     def get_total_price(self):
         return sum(Decimal(item['price']) * Decimal(item['qty']) for item in self.cart.values())
 
