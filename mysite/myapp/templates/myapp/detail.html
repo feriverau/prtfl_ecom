@@ -163,6 +163,8 @@
 
             <div class="space-y-3">
 
+                <!-- Procesador -->
+
                 <div class="flex items-center justify-between">
                     <span class="text-gray-700">
                         Procesador
@@ -170,15 +172,32 @@
 
                     <span
                         id="build-processor"
-                        class="{% if build_status.processor %}text-green-600{% else %}text-gray-400{% endif %} font-medium"
+                        class="font-medium"
                     >
                         {% if build_status.processor %}
-                            ✓ Agregado
+
+                            {% if build_status.processor_compatible %}
+                                <span class="text-green-600">
+                                    ✓ Compatible
+                                </span>
+                            {% else %}
+                                <span class="text-red-600">
+                                    ⚠ Incompatible
+                                </span>
+                            {% endif %}
+
                         {% else %}
-                            ○ Falta
+
+                            <span class="text-gray-400">
+                                ○ Falta
+                            </span>
+
                         {% endif %}
                     </span>
                 </div>
+
+
+                <!-- Placa Madre -->
 
                 <div class="flex items-center justify-between">
                     <span class="text-gray-700">
@@ -187,15 +206,32 @@
 
                     <span
                         id="build-motherboard"
-                        class="{% if build_status.motherboard %}text-green-600{% else %}text-gray-400{% endif %} font-medium"
+                        class="font-medium"
                     >
                         {% if build_status.motherboard %}
-                            ✓ Agregada
+
+                            {% if build_status.motherboard_compatible %}
+                                <span class="text-green-600">
+                                    ✓ Compatible
+                                </span>
+                            {% else %}
+                                <span class="text-red-600">
+                                    ⚠ Incompatible
+                                </span>
+                            {% endif %}
+
                         {% else %}
-                            ○ Falta
+
+                            <span class="text-gray-400">
+                                ○ Falta
+                            </span>
+
                         {% endif %}
                     </span>
                 </div>
+
+
+                <!-- RAM -->
 
                 <div class="flex items-center justify-between">
                     <span class="text-gray-700">
@@ -204,12 +240,26 @@
 
                     <span
                         id="build-ram"
-                        class="{% if build_status.ram %}text-green-600{% else %}text-gray-400{% endif %} font-medium"
+                        class="font-medium"
                     >
                         {% if build_status.ram %}
-                            ✓ Agregada
+
+                            {% if build_status.ram_compatible %}
+                                <span class="text-green-600">
+                                    ✓ Compatible
+                                </span>
+                            {% else %}
+                                <span class="text-red-600">
+                                    ⚠ Incompatible
+                                </span>
+                            {% endif %}
+
                         {% else %}
-                            ○ Falta
+
+                            <span class="text-gray-400">
+                                ○ Falta
+                            </span>
+
                         {% endif %}
                     </span>
                 </div>
@@ -354,6 +404,7 @@
 
 <script>
     $(document).on("click", "#atc", function(e){
+
         console.log("Botón del carro clickeado");
 
         $.ajax({
@@ -364,6 +415,7 @@
                 product_id: $("#atc").val(),
                 product_quantity: $("#select option:selected").text(),
             },
+
             success: function(json) {
 
                 console.log(json);
@@ -376,34 +428,150 @@
                     const motherboard = document.getElementById("build-motherboard");
                     const ram = document.getElementById("build-ram");
 
-                    if (processor) {
-                        processor.textContent = json.build.processor
-                            ? "✓ Agregado"
-                            : "○ Falta";
 
-                        processor.className = json.build.processor
-                            ? "text-green-600 font-medium"
-                            : "text-gray-400 font-medium";
+                    /*
+                     * PROCESADOR
+                     */
+
+                    if (processor) {
+
+                        if (!json.build.processor) {
+
+                            processor.innerHTML = `
+                                <span class="text-gray-400">
+                                    ○ Falta
+                                </span>
+                            `;
+
+                        } else if (json.build.processor_compatible) {
+
+                            processor.innerHTML = `
+                                <span class="text-green-600">
+                                    ✓ Compatible
+                                </span>
+                            `;
+
+                        } else {
+
+                            processor.innerHTML = `
+                                <div class="relative group">
+                                    <span class="text-red-600 cursor-help">
+                                        ⚠ Procesador incompatible
+                                    </span>
+
+                                    <span
+                                        class="absolute right-0 bottom-full mb-2
+                                               hidden group-hover:block
+                                               w-64 rounded-lg bg-gray-900
+                                               px-3 py-2 text-sm text-white
+                                               shadow-lg z-10"
+                                    >
+                                        ${json.build.processor_message}
+                                    </span>
+                                </div>
+                            `;
+
+                        }
                     }
+
+
+                    /*
+                     * PLACA MADRE
+                     */
 
                     if (motherboard) {
-                        motherboard.textContent = json.build.motherboard
-                            ? "✓ Agregada"
-                            : "○ Falta";
 
-                        motherboard.className = json.build.motherboard
-                            ? "text-green-600 font-medium"
-                            : "text-gray-400 font-medium";
+                        if (!json.build.motherboard) {
+
+                            motherboard.innerHTML = `
+                                <span class="text-gray-400">
+                                    ○ Falta
+                                </span>
+                            `;
+
+                        } else if (json.build.motherboard_warnings.length > 0) {
+
+                            motherboard.innerHTML = `
+                                <div class="relative group">
+
+                                    <span class="text-green-600">
+                                        ✓ Seleccionada
+                                    </span>
+
+                                    <span class="text-yellow-500 cursor-help ml-1">
+                                        !
+                                    </span>
+
+                                    <span
+                                        class="absolute right-0 bottom-full mb-2
+                                               hidden group-hover:block
+                                               w-72 rounded-lg bg-gray-900
+                                               px-3 py-2 text-sm text-white
+                                               shadow-lg z-10"
+                                    >
+                                        ${json.build.motherboard_warnings.join("<br><br>")}
+                                    </span>
+
+                                </div>
+                            `;
+
+                        } else {
+
+                            motherboard.innerHTML = `
+                                <span class="text-green-600">
+                                    ✓ Seleccionada
+                                </span>
+                            `;
+
+                        }
                     }
 
-                    if (ram) {
-                        ram.textContent = json.build.ram
-                            ? "✓ Agregada"
-                            : "○ Falta";
 
-                        ram.className = json.build.ram
-                            ? "text-green-600 font-medium"
-                            : "text-gray-400 font-medium";
+                    /*
+                     * RAM
+                     */
+
+                    if (ram) {
+
+                        if (!json.build.ram) {
+
+                            ram.innerHTML = `
+                                <span class="text-gray-400">
+                                    ○ Falta
+                                </span>
+                            `;
+
+                        } else if (json.build.ram_compatible) {
+
+                            ram.innerHTML = `
+                                <span class="text-green-600">
+                                    ✓ Compatible
+                                </span>
+                            `;
+
+                        } else {
+
+                            ram.innerHTML = `
+                                <div class="relative group">
+
+                                    <span class="text-red-600 cursor-help">
+                                        ⚠ RAM incompatible
+                                    </span>
+
+                                    <span
+                                        class="absolute right-0 bottom-full mb-2
+                                               hidden group-hover:block
+                                               w-64 rounded-lg bg-gray-900
+                                               px-3 py-2 text-sm text-white
+                                               shadow-lg z-10"
+                                    >
+                                        ${json.build.ram_message}
+                                    </span>
+
+                                </div>
+                            `;
+
+                        }
                     }
                 }
             },

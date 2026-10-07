@@ -17,15 +17,70 @@ class Cart():
             id__in=self.cart.keys()
         )
 
-        product_types = {
-            product.product_type
-            for product in products
-        }
+        processor = next(
+            (product for product in products if product.product_type == "processor"),
+            None
+        )
+
+        motherboard = next(
+            (product for product in products if product.product_type == "motherboard"),
+            None
+        )
+
+        ram = next(
+            (product for product in products if product.product_type == "ram"),
+            None
+        )
+
+        processor_compatible = True
+        ram_compatible = True
+
+        motherboard_warnings = []
+        processor_message = None
+        ram_message = None
+
+        if processor and motherboard:
+            if processor.socket != motherboard.socket:
+
+                processor_compatible = False
+
+                processor_message = (
+                    f"Tu placa utiliza {motherboard.socket}, "
+                    f"pero este procesador utiliza {processor.socket}."
+                )
+
+                motherboard_warnings.append(
+                    f"Esta placa utiliza {motherboard.socket}, "
+                    f"pero el procesador seleccionado utiliza {processor.socket}."
+                )
+
+        if motherboard and ram:
+            if motherboard.memory_type != ram.memory_type:
+
+                ram_compatible = False
+
+                ram_message = (
+                    f"Tu placa utiliza {motherboard.memory_type}, "
+                    f"pero esta RAM utiliza {ram.memory_type}."
+                )
+
+                motherboard_warnings.append(
+                    f"Esta placa utiliza {motherboard.memory_type}, "
+                    f"pero la RAM seleccionada utiliza {ram.memory_type}."
+                )
 
         return {
-            "processor": "processor" in product_types,
-            "motherboard": "motherboard" in product_types,
-            "ram": "ram" in product_types,
+            "processor": processor is not None,
+            "motherboard": motherboard is not None,
+            "ram": ram is not None,
+
+            "processor_compatible": processor_compatible,
+            "motherboard_compatible": True,
+            "ram_compatible": ram_compatible,
+
+            "processor_message": processor_message,
+            "motherboard_warnings": motherboard_warnings,
+            "ram_message": ram_message,
         }
 
     def get_total_price(self):
