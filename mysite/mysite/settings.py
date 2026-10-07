@@ -213,7 +213,7 @@ JAZZMIN_SETTINGS = {
     'site_brand':"FriendlEcom",
     'welcome_sign':"Welcome to FriendlEcom",
     'copyright':"FriendlEcom",
-    "show_ui_builder": True,
+    "show_ui_builder": False,
 }
 
 JAZZMIN_UI_TWEAKS = {
