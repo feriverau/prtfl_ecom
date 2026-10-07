@@ -29,13 +29,20 @@
           {% with product=item.product %}
           <tr class="hover:bg-gray-50 transition duration-150">
             <td class="p-4">
-              <img
-                src="{{ product.image.url }}"
-                alt="{{ product.title }}"
-                class="w-20 h-20 object-contain rounded"
-              />
+              <a href="{{ product.get_absolute_url }}">
+                <img
+                  src="{{ product.image.url }}"
+                  alt="{{ product.title }}"
+                  class="w-20 h-20 object-contain rounded"
+                />
+              </a>
+              
             </td>
-            <td class="p-4 font-medium text-gray-800">{{ product.name }}</td>
+            <td class="p-4 font-medium text-gray-800">
+              <a href="{{ product.get_absolute_url }}">
+                {{ product.name }}
+              </a>
+            </td>
 
             <!-- <td class="p-2">{{ item.qty }}</td> -->
             <td class="p-4">
